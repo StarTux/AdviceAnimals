@@ -1,0 +1,14 @@
+name: AdviceAnimals
+description: Talking animals
+author: StarTux
+version: 0.3
+main: com.winthier.adviceanimals.AdviceAnimalsPlugin
+commands:
+  AdviceAnimals:
+    aliases: [ aa ]
+    description: AdviceAnimals command interface
+    permission: adviceanimals.aa
+permissions:
+  adviceanimals.aa:
+    description: Use the command interface
+    default: op

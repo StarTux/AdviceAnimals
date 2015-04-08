@@ -1,0 +1,3 @@
+Cooldown: 20
+MessageFormat: '{prefix}: {message}'
+animals: {}
