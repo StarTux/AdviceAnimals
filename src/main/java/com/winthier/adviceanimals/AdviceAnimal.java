@@ -319,8 +319,11 @@ public class AdviceAnimal {
     }
 
     public void check(LivingEntity entity) {
-        cachedEntity = entity;
         Location entityLocation = entity.getLocation();
+        if (cachedEntity == null) {
+            plugin.getLogger().info(String.format("Discovered animal %s at %s %d,%d,%d ", name, entityLocation.getWorld().getName(), entityLocation.getBlockX(), entityLocation.getBlockY(), entityLocation.getBlockZ()));
+        }
+        cachedEntity = entity;
         if (location == null) {
             location = entityLocation.clone();
             return;
