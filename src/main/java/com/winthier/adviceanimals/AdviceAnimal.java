@@ -75,6 +75,7 @@ public class AdviceAnimal {
     }
 
     public void setLocation(Location location) {
+        plugin.getLogger().info(String.format("Set location of %s to %.02f,%.02f,%.02f", name, location.getX(), location.getY(), location.getZ()));
         this.location = location;
     }
 
@@ -89,7 +90,7 @@ public class AdviceAnimal {
     public void select(LivingEntity entity) {
         uuid = entity.getUniqueId();
         cachedEntity = entity;
-        location = entity.getLocation().clone();
+        setLocation(entity.getLocation().clone());
         // if (entity instanceof Tameable) {
         //     Tameable tameable = (Tameable)entity;
         //     if (tameable.isTamed()) {
@@ -112,18 +113,18 @@ public class AdviceAnimal {
      */
     @SuppressWarnings("unchecked")
     public void configure(ConfigurationSection section) {
-        {
-            String tmp = section.getString("UUID");
-            if (tmp != null) {
-                setUniqueId(UUID.fromString(tmp));
-            }
+        // Entity UUID
+        String tmp;
+        if ((tmp = section.getString("UUID")) != null) {
+            setUniqueId(UUID.fromString(tmp));
         }
-        {
-            String tmp = section.getString("Location");
-            if (tmp != null) {
-                Location loc = parseLocation(tmp);
-                if (loc != null) setLocation(loc);
-            }
+        // Entity Location
+        if ((tmp = section.getString("Location")) != null) {
+            Location loc = parseLocation(tmp);
+            if (loc == null) plugin.getLogger().warning("Failed to parse location: " + tmp);
+            if (loc != null) this.location = loc;
+        } else {
+            plugin.getLogger().warning("Animal " + name + " does not set location");
         }
         prefix = section.getString("Prefix", "Animal");
         messages = (List<Object>)section.getList("messages");
@@ -150,7 +151,7 @@ public class AdviceAnimal {
 
     public void serialize(ConfigurationSection section) {
         if (uuid != null) section.set("UUID", uuid.toString());
-        if (location != null) section.set("Location", serializeLocation(location));
+        if (this.location != null) section.set("Location", serializeLocation(this.location));
         section.set("Prefix", prefix);
         section.set("messages", messages);
         section.set("Randomize", randomize);
@@ -181,11 +182,17 @@ public class AdviceAnimal {
         return null;
     }
 
-    private static Location parseLocation(String str) {
+    private Location parseLocation(String str) {
         String tokens[] = str.split(",");
-        if (tokens.length != 6) return null;
+        if (tokens.length != 6) {
+            plugin.getLogger().warning("Expected 6 tokens, got " + tokens.length);
+            return null;
+        }
         World world = Bukkit.getServer().getWorld(tokens[0]);
-        if (world == null) return null;
+        if (world == null) {
+            plugin.getLogger().warning("World not found: " + tokens[0]);
+            return null;
+        }
         double x, y, z;
         float yaw, pitch;
         try {
@@ -195,6 +202,7 @@ public class AdviceAnimal {
             yaw = Float.parseFloat(tokens[4]);
             pitch = Float.parseFloat(tokens[5]);
         } catch (NumberFormatException nfe) {
+            plugin.getLogger().warning("Number Format Exception: " + nfe.getMessage());
             return null;
         }
         return new Location(world, x, y, z, yaw, pitch);
@@ -211,7 +219,7 @@ public class AdviceAnimal {
         } else {
             sender.sendMessage("UUID: " + uuid.toString());
         }
-        if (location == null) {
+        if (this.location == null) {
             sender.sendMessage("Location: N/A");
         } else {
             sender.sendMessage("Location: " + location.getWorld().getName() + ", " + location.getBlockX() + "," + location.getBlockY() + "," + location.getBlockZ());
@@ -324,8 +332,8 @@ public class AdviceAnimal {
             plugin.getLogger().info(String.format("Discovered animal %s at %s %d,%d,%d ", name, entityLocation.getWorld().getName(), entityLocation.getBlockX(), entityLocation.getBlockY(), entityLocation.getBlockZ()));
         }
         cachedEntity = entity;
-        if (location == null) {
-            location = entityLocation.clone();
+        if (this.location == null) {
+            setLocation(entityLocation.clone());
             return;
         }
         double dx = entityLocation.getX() - location.getX();

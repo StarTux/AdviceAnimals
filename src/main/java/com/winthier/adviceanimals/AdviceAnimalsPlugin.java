@@ -37,7 +37,6 @@ public class AdviceAnimalsPlugin extends JavaPlugin {
     public void onEnable() {
         instance = this;
         saveDefaultConfig();
-        reloadConfig();
         loadConfiguration();
         animalEventListener.enable();
         checkAnimalsTask.start();
@@ -196,6 +195,20 @@ public class AdviceAnimalsPlugin extends JavaPlugin {
         } else if (session.info) {
             printEntityInfo(entity, player);
             session.info = false;
+        } else if (session.rename != null) {
+            entity.setCustomName(session.rename);
+            session.rename = null;
+        } else if (session.teleport != null) {
+            Location loc = session.teleport;
+            session.teleport = null;
+            AdviceAnimal animal = getAnimal(entity);
+            if (animal == null) {
+                player.sendMessage("This entity is not an Advice Animal. Teleporting anyway.");
+            } else {
+                animal.setLocation(loc);
+                player.sendMessage("Entity location udpated.");
+            }
+            entity.teleport(loc);
         } else {
             return false;
         }
@@ -234,6 +247,26 @@ public class AdviceAnimalsPlugin extends JavaPlugin {
             }
             getPlayerSession(player).info = true;
             player.sendMessage("Hit the animal you want information about.");
+        } else if (args.length >= 1 && args[0].equals("rename")) {
+            if (player == null) {
+                sender.sendMessage("Player expected");
+                return true;
+            }
+            if (args.length >= 2) {
+                StringBuilder sb = new StringBuilder(args[1]);
+                for (int i = 2; i < args.length; ++i) sb.append(" ").append(args[i]);
+                getPlayerSession(player).rename = ChatColor.translateAlternateColorCodes('&', sb.toString());
+            } else {
+                getPlayerSession(player).rename = "";
+            }
+            player.sendMessage("Hit the animal you want to rename.");
+        } else if (args.length == 1 && args[0].equals("teleport")) {
+            if (player == null) {
+                sender.sendMessage("Player expected");
+                return true;
+            }
+            getPlayerSession(player).teleport = player.getLocation();
+            player.sendMessage("Hit the animal you want to teleport.");
         } else if (args.length == 2 && args[0].equals("select")) {
             if (player == null) {
                 sender.sendMessage("Player expected");
@@ -277,6 +310,7 @@ public class AdviceAnimalsPlugin extends JavaPlugin {
             sender.sendMessage("- /aa info");
             sender.sendMessage("- /aa info <name>");
             sender.sendMessage("- /aa setowner <name>");
+            sender.sendMessage("- /aa rename [name]");
         }
         return true;
     }
