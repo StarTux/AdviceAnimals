@@ -3,6 +3,7 @@ description: Talking animals
 author: StarTux
 version: 0.3
 main: com.winthier.adviceanimals.AdviceAnimalsPlugin
+softdepend: [ Multiverse-Core ]
 commands:
   AdviceAnimals:
     aliases: [ aa ]
