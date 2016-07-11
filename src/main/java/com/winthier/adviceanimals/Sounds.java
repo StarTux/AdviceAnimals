@@ -38,7 +38,7 @@ public class Sounds {
                         cancel();
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    // do nothing
                     cancel();
                 }
             }
