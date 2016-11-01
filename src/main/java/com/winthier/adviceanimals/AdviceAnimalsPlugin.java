@@ -30,6 +30,8 @@ public class AdviceAnimalsPlugin extends JavaPlugin {
     // Tasks to locate animals and make sure they don't wander.
     private CheckAnimalsTask checkAnimalsTask = new CheckAnimalsTask(this);
     private FindAnimalsTask findAnimalsTask = new FindAnimalsTask(this);
+    // Animation
+    private Animation recording = null;
     // Static instance.
     private static AdviceAnimalsPlugin instance;
 
@@ -303,6 +305,52 @@ public class AdviceAnimalsPlugin extends JavaPlugin {
                 sender.sendMessage("Tasks restarted");
             } else {
                 sender.sendMessage("Usage: /aa tasks start|stop");
+            }
+        } else if (args[0].equals("record") && args.length == 2 || args.length == 3) {
+            if (player == null) return false;
+            String subcmd = args[1].toLowerCase();
+            if (subcmd.equals("start")) {
+                if (recording != null) {
+                    player.sendMessage("Recording already exists!");
+                    return true;
+                }
+                recording = new Animation();
+                recording.recordee = player;
+                recording.runTaskTimer(this, 1, 1);
+                player.sendMessage("Recording started");
+            } else if (subcmd.equals("stop")) {
+                if (recording == null) {
+                    player.sendMessage("Not recording!");
+                    return true;
+                }
+                try {
+                    recording.cancel();
+                } catch (IllegalStateException ise) {}
+                player.sendMessage("Recording stopped");
+            } else if (subcmd.equals("cancel")) {
+                if (recording == null) {
+                    player.sendMessage("Not recording!");
+                    return true;
+                }
+                try {
+                    recording.cancel();
+                } catch (IllegalStateException ise) {}
+                recording = null;
+                player.sendMessage("Recording cancelled");
+            } else if (subcmd.equals("save") && args.length == 3) {
+                if (recording == null) {
+                    player.sendMessage("No recording exists!");
+                    return true;
+                }
+                String name = args[2];
+                try {
+                    recording.cancel();
+                } catch (IllegalStateException ise) {}
+                recording.saveAnimation(name);
+                recording = null;
+                player.sendMessage("Recording saved as " + name + ".");
+            } else {
+                return false;
             }
         } else {
             sender.sendMessage("Usage:");

@@ -21,7 +21,7 @@ public class CheckAnimalsTask {
                 iter();
             }
         };
-        task.runTaskTimer(plugin, 20L, 20L);
+        task.runTaskTimer(plugin, 1, 1);
     }
 
     public void stop() {

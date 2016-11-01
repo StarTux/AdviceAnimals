@@ -43,6 +43,9 @@ public class AdviceAnimal {
     private float soundMedian, soundVariance;
     // randomizer
     private static final Random random = new Random(System.currentTimeMillis());
+    // animation
+    private Animation animation = null;
+    private int animationFrame = 0;
 
     public AdviceAnimal(AdviceAnimalsPlugin plugin, String name) {
         this.plugin = plugin;
@@ -147,6 +150,11 @@ public class AdviceAnimal {
             soundMedian = (float)soundSection.getDouble("Median", 1.0);
             soundVariance = (float)soundSection.getDouble("Variance", 0.25);
         }
+        // animation
+        String animationName = section.getString("Animation");
+        if (animationName != null) {
+            this.animation = Animation.loadAnimation(animationName);
+        }
     }
 
     public void serialize(ConfigurationSection section) {
@@ -168,6 +176,7 @@ public class AdviceAnimal {
             soundSection.set("Median", soundMedian);
             soundSection.set("Variance", soundVariance);
         }
+        if (animation != null) section.set("Animation", animation.name);
     }
 
     public LivingEntity getEntity() {
@@ -332,17 +341,23 @@ public class AdviceAnimal {
             plugin.getLogger().info(String.format("Discovered animal %s at %s %d,%d,%d ", name, entityLocation.getWorld().getName(), entityLocation.getBlockX(), entityLocation.getBlockY(), entityLocation.getBlockZ()));
         }
         cachedEntity = entity;
-        if (this.location == null) {
-            setLocation(entityLocation.clone());
-            return;
-        }
-        double dx = entityLocation.getX() - location.getX();
-        double dy = entityLocation.getY() - location.getY();
-        double dz = entityLocation.getZ() - location.getZ();
-        if (dx * dx + dz * dz > horizontalDistance * horizontalDistance || Math.abs(dy) > verticalDistance) {
-            teleporting = true;
-            entity.teleport(location);
-            teleporting = false;
+        if (animation == null || animation.frames.isEmpty()) {
+            if (this.location == null) {
+                setLocation(entityLocation.clone());
+                return;
+            }
+            double dx = entityLocation.getX() - location.getX();
+            double dy = entityLocation.getY() - location.getY();
+            double dz = entityLocation.getZ() - location.getZ();
+            if (dx * dx + dz * dz > horizontalDistance * horizontalDistance || Math.abs(dy) > verticalDistance) {
+                teleporting = true;
+                entity.teleport(location);
+                teleporting = false;
+            }
+        } else {
+            if (animationFrame >= animation.frames.size()) animationFrame = 0;
+            animation.apply(entity, animationFrame);
+            animationFrame += 1;
         }
         if (slow > 0) {
             entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 864000, slow, true), true);
