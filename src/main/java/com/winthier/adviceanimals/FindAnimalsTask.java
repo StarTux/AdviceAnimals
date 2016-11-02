@@ -3,7 +3,7 @@ package com.winthier.adviceanimals;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -11,9 +11,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class FindAnimalsTask {
     private final static long INTERVAL = 20L;
-    private final static double RADIUS = 64.0;
     private final AdviceAnimalsPlugin plugin;
-    Iterator<UUID> players = null;
+    Iterator<Entity> entities = null;
     private BukkitRunnable task;
 
     public FindAnimalsTask(AdviceAnimalsPlugin plugin) {
@@ -42,22 +41,22 @@ public class FindAnimalsTask {
     }
 
     public void flush() {
-        players = null;
+        entities = null;
     }
     
     public void iter() {
         try {
-            if (players == null || !players.hasNext()) {
-                List<UUID> uuids = new ArrayList<>();
-                for (Player player : plugin.getServer().getOnlinePlayers()) {
-                    uuids.add(player.getUniqueId());
+            if (entities == null || !entities.hasNext()) {
+                List<Entity> entities = new ArrayList<>();
+                for (World world: plugin.getServer().getWorlds()) {
+                    entities.addAll(world.getEntities());
                 }
-                this.players = uuids.iterator();
+                this.entities = entities.iterator();
             } else {
-                UUID uuid = players.next();
-                Player player = plugin.getServer().getPlayer(uuid);
-                if (player == null) return;
-                for (Entity entity : player.getNearbyEntities(RADIUS, RADIUS, RADIUS)) {
+                for (int i = 0; i < 100; ++i) {
+                    if (!entities.hasNext()) return;
+                    Entity entity = entities.next();
+                    if (!entity.isValid()) continue;
                     plugin.checkEntity(entity);
                 }
             }
