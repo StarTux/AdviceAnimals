@@ -3,8 +3,10 @@ package com.winthier.adviceanimals;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,6 +36,7 @@ public class AdviceAnimalsPlugin extends JavaPlugin {
     private Animation recording = null;
     // Static instance.
     private static AdviceAnimalsPlugin instance;
+    private final Set<UUID> ignores = new HashSet<>();
 
     @Override
     public void onEnable() {
@@ -166,6 +169,7 @@ public class AdviceAnimalsPlugin extends JavaPlugin {
     }
 
     public boolean checkEntity(Entity entity, Player player) {
+        if (player != null && ignores.contains(player.getUniqueId())) return false;
         if (entity == null) return false;
         if (!(entity instanceof LivingEntity)) return false;
         LivingEntity living = (LivingEntity)entity;
@@ -269,6 +273,18 @@ public class AdviceAnimalsPlugin extends JavaPlugin {
             }
             getPlayerSession(player).teleport = player.getLocation();
             player.sendMessage("Hit the animal you want to teleport.");
+        } else if (args.length == 1 && args[0].equals("ignore")) {
+            if (player == null) {
+                sender.sendMessage("Player expected");
+                return true;
+            }
+            boolean val = ignores.remove(player.getUniqueId());
+            if (val) {
+                player.sendMessage("No longer ignoring advice animals.");
+            } else {
+                ignores.add(player.getUniqueId());
+                player.sendMessage("Ignoring advice animals.");
+            }
         } else if (args.length == 2 && args[0].equals("select")) {
             if (player == null) {
                 sender.sendMessage("Player expected");
