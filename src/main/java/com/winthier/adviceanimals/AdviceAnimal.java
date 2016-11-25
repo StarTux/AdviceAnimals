@@ -349,7 +349,7 @@ public class AdviceAnimal {
             double dx = entityLocation.getX() - location.getX();
             double dy = entityLocation.getY() - location.getY();
             double dz = entityLocation.getZ() - location.getZ();
-            if (dx * dx + dz * dz > horizontalDistance * horizontalDistance || Math.abs(dy) > verticalDistance) {
+            if (!entityLocation.getWorld().equals(location) || dx * dx + dz * dz > horizontalDistance * horizontalDistance || Math.abs(dy) > verticalDistance) {
                 teleporting = true;
                 entity.teleport(location);
                 teleporting = false;
