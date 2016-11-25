@@ -285,6 +285,25 @@ public class AdviceAnimalsPlugin extends JavaPlugin {
                 ignores.add(player.getUniqueId());
                 player.sendMessage("Ignoring advice animals.");
             }
+        } else if (args.length == 2 && args[0].equals("locate")) {
+            if (player == null) {
+                sender.sendMessage("Player expected");
+                return true;
+            }
+            String key = args[1];
+            AdviceAnimal aa = nameMap.get(key);
+            if (aa == null) {
+                sender.sendMessage("Advice animal not found: " + key);
+                return true;
+            }
+            if (aa.getEntity() != null && aa.getEntity().isValid()) {
+                player.teleport(aa.getEntity());
+            } else if (aa.getLocation() != null) {
+                player.teleport(aa.getLocation());
+            } else {
+                player.sendMessage("Could not locate advice animal " + aa.getName());
+            }
+                player.sendMessage("Teleported to advice animal " + aa.getName());
         } else if (args.length == 2 && args[0].equals("select")) {
             if (player == null) {
                 sender.sendMessage("Player expected");
@@ -374,7 +393,9 @@ public class AdviceAnimalsPlugin extends JavaPlugin {
             sender.sendMessage("- /aa info");
             sender.sendMessage("- /aa info <name>");
             sender.sendMessage("- /aa setowner <name>");
+            sender.sendMessage("- /aa locate [name]");
             sender.sendMessage("- /aa rename [name]");
+            sender.sendMessage("- /aa ignore");
         }
         return true;
     }
