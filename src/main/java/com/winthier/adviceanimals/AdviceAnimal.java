@@ -289,6 +289,7 @@ public class AdviceAnimal {
         for (String string : getStringList(config, "Text")) {
             string = format(string, player);
             player.sendMessage(plugin.formatMessage(prefix, string));
+            Msg.sendActionBar(player, string);
         }
         for (String string : getStringList(config, "Chat")) {
             string = format(string, player);
