@@ -44,6 +44,7 @@ public class AdviceAnimal {
     // randomizer
     private static final Random random = new Random(System.currentTimeMillis());
     // animation
+    private String animationName;
     private Animation animation = null;
     private int animationFrame = 0;
 
@@ -150,11 +151,7 @@ public class AdviceAnimal {
             soundMedian = (float)soundSection.getDouble("Median", 1.0);
             soundVariance = (float)soundSection.getDouble("Variance", 0.25);
         }
-        // animation
-        String animationName = section.getString("Animation");
-        if (animationName != null) {
-            this.animation = Animation.loadAnimation(animationName);
-        }
+        animationName = section.getString("Animation");
     }
 
     public void serialize(ConfigurationSection section) {
@@ -176,7 +173,7 @@ public class AdviceAnimal {
             soundSection.set("Median", soundMedian);
             soundSection.set("Variance", soundVariance);
         }
-        if (animation != null) section.set("Animation", animation.name);
+        if (animationName != null) section.set("Animation", animationName);
     }
 
     public LivingEntity getEntity() {
@@ -342,6 +339,14 @@ public class AdviceAnimal {
             plugin.getLogger().info(String.format("Discovered animal %s at %s %d,%d,%d ", name, entityLocation.getWorld().getName(), entityLocation.getBlockX(), entityLocation.getBlockY(), entityLocation.getBlockZ()));
         }
         cachedEntity = entity;
+        if (animation == null && animationName != null) {
+            try {
+                animation = Animation.loadAnimation(animationName);
+            } catch (Exception e) {
+                e.printStackTrace();
+                animation = new Animation();
+            }
+        }
         if (animation == null || animation.frames.isEmpty()) {
             if (this.location == null) {
                 setLocation(entityLocation.clone());
