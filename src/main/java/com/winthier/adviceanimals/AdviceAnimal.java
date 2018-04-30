@@ -9,6 +9,7 @@ import java.util.regex.Pattern;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
@@ -366,7 +367,8 @@ public class AdviceAnimal {
             animationFrame += 1;
         }
         if (slow > 0) {
-            entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 864000, slow, true), true);
+            entity.removePotionEffect(PotionEffectType.SLOW);
+            entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.0);
         }
         if (health > 0.0 && entity.getHealth() != health) {
             entity.setHealth(health);
