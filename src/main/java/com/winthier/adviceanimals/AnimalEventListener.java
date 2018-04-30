@@ -50,9 +50,10 @@ public class AnimalEventListener implements Listener {
     public void onPlayerInteractAtEntity(PlayerInteractAtEntityEvent event) {
         if (plugin.checkEntity(event.getRightClicked(), event.getPlayer())) event.setCancelled(true);
     }
-    
+
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        if (event.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return;
         if (event.getDamager() instanceof Player) {
             if (plugin.checkEntity(event.getEntity(), (Player)event.getDamager())) event.setCancelled(true);
         } else {
