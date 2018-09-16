@@ -9,7 +9,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class FindAnimalsTask {
+public final class FindAnimalsTask {
     private final static long INTERVAL = 20L;
     private final AdviceAnimalsPlugin plugin;
     Iterator<Entity> entities = null;

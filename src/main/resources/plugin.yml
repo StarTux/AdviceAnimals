@@ -2,6 +2,8 @@ name: AdviceAnimals
 description: Talking animals
 author: StarTux
 version: 0.3
+api-version: 1.13
+website: https://cavetale.com
 main: com.winthier.adviceanimals.AdviceAnimalsPlugin
 softdepend: [ Multiverse-Core ]
 commands:

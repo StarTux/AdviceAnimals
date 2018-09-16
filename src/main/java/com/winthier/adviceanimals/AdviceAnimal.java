@@ -22,7 +22,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.json.simple.JSONValue;
 
-public class AdviceAnimal {
+public final class AdviceAnimal {
     public final AdviceAnimalsPlugin plugin;
     public final String name;
     private UUID uuid = null;

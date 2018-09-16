@@ -34,7 +34,7 @@ import org.spigotmc.event.entity.EntityDismountEvent;
 import org.spigotmc.event.entity.EntityMountEvent;
 
 @RequiredArgsConstructor
-public class AnimalEventListener implements Listener {
+public final class AnimalEventListener implements Listener {
     public final AdviceAnimalsPlugin plugin;
 
     public void enable() {

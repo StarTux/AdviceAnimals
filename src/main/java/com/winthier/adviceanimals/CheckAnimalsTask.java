@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class CheckAnimalsTask {
+public final class CheckAnimalsTask {
     private final AdviceAnimalsPlugin plugin;
     Iterator<AdviceAnimal> animals;
     private BukkitRunnable task;

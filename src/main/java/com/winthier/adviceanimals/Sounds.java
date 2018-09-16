@@ -8,7 +8,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class Sounds {
+public final class Sounds {
     private final AdviceAnimalsPlugin plugin;
     private Random random = new Random(System.currentTimeMillis());
 

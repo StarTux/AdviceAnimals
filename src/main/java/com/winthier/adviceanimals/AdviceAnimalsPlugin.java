@@ -21,7 +21,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Tameable;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class AdviceAnimalsPlugin extends JavaPlugin {
+public final class AdviceAnimalsPlugin extends JavaPlugin {
     private final Map<UUID, AdviceAnimal> uuidMap = new HashMap<UUID, AdviceAnimal>();
     private final Map<String, AdviceAnimal> nameMap = new LinkedHashMap<String, AdviceAnimal>();
     private final Map<String, PlayerSession> sessionMap = new HashMap<String, PlayerSession>();
