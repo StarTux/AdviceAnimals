@@ -14,8 +14,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Ageable;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.util.EulerAngle;
 import org.json.simple.JSONValue;
 
 public final class AdviceAnimal {
@@ -44,6 +46,8 @@ public final class AdviceAnimal {
     private String animationName;
     private Animation animation = null;
     private int animationFrame = 0;
+    private int ticks;
+    private int motion;
 
     public AdviceAnimal(AdviceAnimalsPlugin plugin, String name) {
         this.plugin = plugin;
@@ -358,6 +362,30 @@ public final class AdviceAnimal {
                 teleporting = true;
                 entity.teleport(location);
                 teleporting = false;
+            }
+            if (entity instanceof ArmorStand) {
+                ArmorStand stand = (ArmorStand) entity;
+                if (motion < 20) {
+                    int m = motion;
+                    stand.setRightLegPose(new EulerAngle(1.0 - (double) m / 10.0, 0.0, 0.02));
+                    stand.setLeftLegPose(new EulerAngle(-1.0 + (double) m / 10.0, 0.0, -0.02));
+
+                    stand.setLeftArmPose(new EulerAngle(1.0 - (double) m / 10.0, 0.0, -0.02));
+                    stand.setRightArmPose(new EulerAngle(-1.0 + (double) m / 10.0, 0.0, 0.02));
+
+                    stand.setHeadPose(new EulerAngle(0.25 - (double) m / 40.0, 0.0, 0.0));
+                } else {
+                    int m = motion - 20;
+                    stand.setLeftLegPose(new EulerAngle(1.0 - (double) m / 10.0, 0.0, -0.02));
+                    stand.setRightLegPose(new EulerAngle(-1.0 + (double) m / 10.0, 0.0, 0.02));
+
+                    stand.setRightArmPose(new EulerAngle(1.0 - (double) m / 10.0, 0.0, 0.02));
+                    stand.setLeftArmPose(new EulerAngle(-1.0 + (double) m / 10.0, 0.0, -0.02));
+
+                    stand.setHeadPose(new EulerAngle(-0.25 + (double) m / 40.0, 0.0, 0.0));
+                }
+                motion = motion + 1;
+                if (motion >= 40) motion = 0;
             }
         } else {
             if (animationFrame >= animation.frames.size()) animationFrame = 0;
