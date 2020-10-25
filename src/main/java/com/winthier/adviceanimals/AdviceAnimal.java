@@ -271,6 +271,7 @@ public final class AdviceAnimal {
 
     private String format(String string, Player player) {
         string = string.replace("{player}", player.getName());
+        string = string.replace("{adviceanimal}", name);
         return string;
     }
 

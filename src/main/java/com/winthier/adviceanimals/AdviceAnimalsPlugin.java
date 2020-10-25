@@ -113,8 +113,8 @@ public final class AdviceAnimalsPlugin extends JavaPlugin {
 
     public String formatMessage(String prefix, String message) {
         String result = messageFormat;
-        result = result.replaceAll(Pattern.quote("{prefix}"), Matcher.quoteReplacement(prefix));
-        result = result.replaceAll(Pattern.quote("{message}"), Matcher.quoteReplacement(message));
+        result = result.replace("{prefix}", prefix);
+        result = result.replace("{message}", message);
         result = ChatColor.translateAlternateColorCodes('&', result);
         return result;
     }
