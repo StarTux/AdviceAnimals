@@ -14,12 +14,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Ageable;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Tameable;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.json.simple.JSONValue;
 
 public final class AdviceAnimal {
@@ -35,7 +31,7 @@ public final class AdviceAnimal {
     private double horizontalDistance = 0.0;
     private double verticalDistance = 0.0;
     private String prefix = "Animal";
-    private int slow = 0;
+    private boolean slow = false;
     // sound effect
     private String soundName;
     private int soundAmount;
@@ -80,7 +76,6 @@ public final class AdviceAnimal {
     }
 
     public void setLocation(Location location) {
-        plugin.getLogger().info(String.format("Set location of %s to %.02f,%.02f,%.02f", name, location.getX(), location.getY(), location.getZ()));
         this.location = location;
     }
 
@@ -108,6 +103,7 @@ public final class AdviceAnimal {
             ageable.setAgeLock(true);
         }
         entity.setRemoveWhenFarAway(false);
+        entity.setPersistent(true);
         health = entity.getHealth();
     }
 
@@ -132,25 +128,25 @@ public final class AdviceAnimal {
             plugin.getLogger().warning("Animal " + name + " does not set location");
         }
         prefix = section.getString("Prefix", "Animal");
-        messages = (List<Object>)section.getList("messages");
+        messages = (List<Object>) section.getList("messages");
         // legacy
         if (this.messages == null && section.isList("Messages")) {
             plugin.getLogger().warning(name + ": LEGACY");
-            this.messages = (List<Object>)section.getList("Messages");
+            this.messages = (List<Object>) section.getList("Messages");
         }
         randomize = section.getBoolean("Randomize", false);
         health = section.getDouble("Health", 0.0);
-        slow = section.getInt("Slow", 0);
+        slow = section.getBoolean("Slow", false);
         horizontalDistance = section.getDouble("HorizontalDistance", 0.0);
         verticalDistance = section.getDouble("VerticalDistance", 0.0);
         ConfigurationSection soundSection = section.getConfigurationSection("sound");
         if (soundSection != null) {
-            soundName = soundSection.getString("Name", "mob.cat.meow");
+            soundName = soundSection.getString("Name", "ENTITY_CAT_AMBIENT");
             soundAmount = soundSection.getInt("Amount", 5);
             soundPeriod = soundSection.getLong("Period", 4);
-            soundVolume = (float)soundSection.getDouble("Volume", 1.0);
-            soundMedian = (float)soundSection.getDouble("Median", 1.0);
-            soundVariance = (float)soundSection.getDouble("Variance", 0.25);
+            soundVolume = (float) soundSection.getDouble("Volume", 1.0);
+            soundMedian = (float) soundSection.getDouble("Median", 1.0);
+            soundVariance = (float) soundSection.getDouble("Variance", 0.25);
         }
         animationName = section.getString("Animation");
     }
@@ -336,10 +332,11 @@ public final class AdviceAnimal {
 
     public void check(LivingEntity entity) {
         Location entityLocation = entity.getLocation();
-        if (cachedEntity == null) {
+        if (entity != cachedEntity) {
             plugin.getLogger().info(String.format("Discovered animal %s at %s %d,%d,%d ", name, entityLocation.getWorld().getName(), entityLocation.getBlockX(), entityLocation.getBlockY(), entityLocation.getBlockZ()));
+            cachedEntity = entity;
         }
-        cachedEntity = entity;
+        // Animation stuff
         if (animation == null && animationName != null) {
             try {
                 animation = Animation.loadAnimation(animationName);
@@ -356,7 +353,8 @@ public final class AdviceAnimal {
             double dx = entityLocation.getX() - location.getX();
             double dy = entityLocation.getY() - location.getY();
             double dz = entityLocation.getZ() - location.getZ();
-            if (!entityLocation.getWorld().equals(location) || dx * dx + dz * dz > horizontalDistance * horizontalDistance || Math.abs(dy) > verticalDistance) {
+            if (!entityLocation.getWorld().equals(location.getWorld()) || dx * dx + dz * dz > horizontalDistance * horizontalDistance || Math.abs(dy) > verticalDistance) {
+                plugin.getLogger().info("Teleporting " + name);
                 teleporting = true;
                 entity.teleport(location);
                 teleporting = false;
@@ -366,8 +364,7 @@ public final class AdviceAnimal {
             animation.apply(entity, animationFrame);
             animationFrame += 1;
         }
-        if (slow > 0) {
-            entity.removePotionEffect(PotionEffectType.SLOW);
+        if (slow) {
             entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.0);
         }
         if (health > 0.0 && entity.getHealth() != health) {

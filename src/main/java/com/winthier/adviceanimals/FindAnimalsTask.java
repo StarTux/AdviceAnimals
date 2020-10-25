@@ -5,8 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public final class FindAnimalsTask {

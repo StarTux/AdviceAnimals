@@ -1,10 +1,10 @@
 package com.winthier.adviceanimals;
 
 import com.winthier.adviceanimals.AdviceAnimalsPlugin;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 import org.bukkit.Location;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -32,7 +32,7 @@ public final class Sounds {
                     if (sound == null) {
                         player.playSound(loc, soundName, volume, median + random.nextFloat() * variance - random.nextFloat() * variance);
                     } else {
-                        loc.getWorld().playSound(loc, sound, volume, median + random.nextFloat() * variance - random.nextFloat() * variance);
+                        loc.getWorld().playSound(loc, sound, SoundCategory.MASTER, volume, median + random.nextFloat() * variance - random.nextFloat() * variance);
                     }
                     if (++count >= amount) {
                         cancel();

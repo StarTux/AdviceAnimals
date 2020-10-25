@@ -11,6 +11,21 @@ commands:
     aliases: [ aa ]
     description: AdviceAnimals command interface
     permission: adviceanimals.aa
+    usage: |-
+      Usage:
+      /aa reload
+      /aa save
+      /aa info [name] - Info (hit)
+      /aa rename [name] - Rename animal (hit)
+      /aa teleport - Teleport animal (hit)
+      /aa ignore - Toggle ignore
+      /aa locate <name> - Teleport to animal
+      /aa select <name> - Select animal (hit)
+      /aa create <name> - Create animal (hit)
+      /aa tasks start|stop - Start or stop bg tasks
+      /aa record start|stop|cancel - Record your path
+      /aa record save <name> - Save a recording
+
 permissions:
   adviceanimals.aa:
     description: Use the command interface

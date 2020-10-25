@@ -1,6 +1,5 @@
 package com.winthier.adviceanimals;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -9,9 +8,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.json.simple.JSONValue;
+import com.google.gson.Gson;
 
-public class Msg {
+public final class Msg {
+    private Msg() { }
+    private static Gson gson = new Gson();
+
     public static String format(String msg, Object... args) {
         if (msg == null) return "";
         msg = ChatColor.translateAlternateColorCodes('&', msg);
@@ -45,14 +47,14 @@ public class Msg {
     public static void raw(Player player, Object... obj) {
         if (obj.length == 0) return;
         if (obj.length == 1) {
-            consoleCommand("minecraft:tellraw %s %s", player.getName(), JSONValue.toJSONString(obj[0]));
+            consoleCommand("minecraft:tellraw %s %s", player.getName(), gson.toJson(obj[0]));
         } else {
-            consoleCommand("minecraft:tellraw %s %s", player.getName(), JSONValue.toJSONString(Arrays.asList(obj)));
+            consoleCommand("minecraft:tellraw %s %s", player.getName(), gson.toJson(Arrays.asList(obj)));
         }
     }
 
     public static String toJsonString(Object obj) {
-        return JSONValue.toJSONString(obj);
+        return gson.toJson(obj);
     }
 
     public static Object button(ChatColor color, String chat, String tooltip, String command) {
@@ -111,9 +113,6 @@ public class Msg {
     }
 
     public static void sendActionBar(Player player, String msg) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("text", format(msg));
-        map.put("color", "black");
-        consoleCommand("minecraft:title %s actionbar %s", player.getName(), JSONValue.toJSONString(map));
+        player.sendActionBar(format(msg));
     }
 }

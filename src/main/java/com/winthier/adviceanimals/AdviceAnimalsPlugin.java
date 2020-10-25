@@ -1,6 +1,5 @@
 package com.winthier.adviceanimals;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -172,7 +171,7 @@ public final class AdviceAnimalsPlugin extends JavaPlugin {
         if (player != null && ignores.contains(player.getUniqueId())) return false;
         if (entity == null) return false;
         if (!(entity instanceof LivingEntity)) return false;
-        LivingEntity living = (LivingEntity)entity;
+        LivingEntity living = (LivingEntity) entity;
         AdviceAnimal animal = getAnimal(living);
         if (animal != null) animal.check(living);
         if (player != null) {
@@ -186,7 +185,7 @@ public final class AdviceAnimalsPlugin extends JavaPlugin {
     }
 
     public boolean checkEntity(Entity entity) {
-        return checkEntity(entity, (Player)null);
+        return checkEntity(entity, (Player) null);
     }
 
     private boolean modifyAnimal(Player player, LivingEntity entity) {
@@ -223,8 +222,9 @@ public final class AdviceAnimalsPlugin extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String args[]) {
+        if (args.length == 0) return false;
         Player player = null;
-        if (sender instanceof Player) player = (Player)sender;
+        if (sender instanceof Player) player = (Player) sender;
         if (args.length == 1 && args[0].equals("reload")) {
             reloadConfig();
             loadConfiguration();
@@ -341,7 +341,7 @@ public final class AdviceAnimalsPlugin extends JavaPlugin {
             } else {
                 sender.sendMessage("Usage: /aa tasks start|stop");
             }
-        } else if (args[0].equals("record") && args.length == 2 || args.length == 3) {
+        } else if (args.length == 2 || args.length == 3 && args[0].equals("record")) {
             if (player == null) return false;
             String subcmd = args[1].toLowerCase();
             if (subcmd.equals("start")) {
@@ -387,15 +387,6 @@ public final class AdviceAnimalsPlugin extends JavaPlugin {
             } else {
                 return false;
             }
-        } else {
-            sender.sendMessage("Usage:");
-            sender.sendMessage("- /aa list");
-            sender.sendMessage("- /aa info");
-            sender.sendMessage("- /aa info <name>");
-            sender.sendMessage("- /aa setowner <name>");
-            sender.sendMessage("- /aa locate [name]");
-            sender.sendMessage("- /aa rename [name]");
-            sender.sendMessage("- /aa ignore");
         }
         return true;
     }

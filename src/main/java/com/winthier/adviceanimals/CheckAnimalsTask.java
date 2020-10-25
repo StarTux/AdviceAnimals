@@ -1,7 +1,5 @@
 package com.winthier.adviceanimals;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import org.bukkit.scheduler.BukkitRunnable;
 
