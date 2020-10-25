@@ -266,9 +266,20 @@ public final class AdviceAnimalsPlugin extends JavaPlugin {
                 getPlayerSession(player).rename = "";
             }
             player.sendMessage("Hit the animal you want to rename.");
-        } else if (args.length == 1 && args[0].equals("teleport")) {
+        } else if ((args.length == 1 || args.length == 2) && args[0].equals("teleport")) {
             if (player == null) {
                 sender.sendMessage("Player expected");
+                return true;
+            }
+            if (args.length == 2) {
+                AdviceAnimal animal = nameMap.get(args[1]);
+                if (animal == null) {
+                    player.sendMessage(ChatColor.RED + "Animal not found: " + args[1]);
+                    return true;
+                }
+                animal.setLocation(player.getLocation());
+                animal.check();
+                player.sendMessage(ChatColor.GREEN + "Animal teleported to you: " + animal.name);
                 return true;
             }
             getPlayerSession(player).teleport = player.getLocation();
