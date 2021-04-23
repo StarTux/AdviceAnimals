@@ -71,9 +71,9 @@ public final class AdviceAnimal {
         return uuid;
     }
 
-    public void setUniqueId(UUID uuid) {
-        plugin.updateUniqueId(this.uuid, uuid, this);
-        this.uuid = uuid;
+    public void setUniqueId(UUID newUuid) {
+        plugin.updateUniqueId(this.uuid, newUuid, this);
+        this.uuid = newUuid;
     }
 
     public void setCachedEntity(LivingEntity entity) {

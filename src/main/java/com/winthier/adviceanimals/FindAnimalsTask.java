@@ -45,11 +45,11 @@ public final class FindAnimalsTask {
     public void iter() {
         try {
             if (entities == null || !entities.hasNext()) {
-                List<Entity> entities = new ArrayList<>();
+                List<Entity> entityList = new ArrayList<>();
                 for (World world: plugin.getServer().getWorlds()) {
-                    entities.addAll(world.getEntities());
+                    entityList.addAll(world.getEntities());
                 }
-                this.entities = entities.iterator();
+                this.entities = entityList.iterator();
             } else {
                 for (int i = 0; i < 100; ++i) {
                     if (!entities.hasNext()) return;
