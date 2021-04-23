@@ -16,6 +16,7 @@ import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.util.EulerAngle;
 import org.json.simple.JSONValue;
@@ -395,6 +396,9 @@ public final class AdviceAnimal {
         }
         if (slow) {
             entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.0);
+            if (entity instanceof Mob) {
+                Bukkit.getMobGoals().removeAllGoals((Mob) entity);
+            }
         }
         if (health > 0.0 && entity.getHealth() != health) {
             entity.setHealth(health);
