@@ -35,6 +35,7 @@ public final class AdviceAnimal {
     private double verticalDistance = 0.0;
     private String prefix = "Animal";
     private boolean slow = false;
+    private boolean removeGoals = false;
     // sound effect
     private String soundName;
     private int soundAmount;
@@ -142,6 +143,7 @@ public final class AdviceAnimal {
         randomize = section.getBoolean("Randomize", false);
         health = section.getDouble("Health", 0.0);
         slow = section.getBoolean("Slow", false);
+        removeGoals = section.getBoolean("RemoveGoals", false);
         horizontalDistance = section.getDouble("HorizontalDistance", 0.0);
         verticalDistance = section.getDouble("VerticalDistance", 0.0);
         ConfigurationSection soundSection = section.getConfigurationSection("sound");
@@ -164,6 +166,7 @@ public final class AdviceAnimal {
         section.set("Randomize", randomize);
         section.set("Health", health);
         section.set("Slow", slow);
+        section.set("RemoveGoals", removeGoals);
         section.set("HorizontalDistance", horizontalDistance);
         section.set("VerticalDistance", verticalDistance);
         if (soundName != null) {
@@ -396,9 +399,9 @@ public final class AdviceAnimal {
         }
         if (slow) {
             entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.0);
-            if (entity instanceof Mob) {
-                Bukkit.getMobGoals().removeAllGoals((Mob) entity);
-            }
+        }
+        if (removeGoals && entity instanceof Mob) {
+            Bukkit.getMobGoals().removeAllGoals((Mob) entity);
         }
         if (health > 0.0 && entity.getHealth() != health) {
             entity.setHealth(health);
