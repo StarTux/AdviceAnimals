@@ -8,12 +8,12 @@ import org.bukkit.entity.Entity;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public final class FindAnimalsTask {
-    private final static long INTERVAL = 20L;
+    private static final long INTERVAL = 20L;
     private final AdviceAnimalsPlugin plugin;
     Iterator<Entity> entities = null;
     private BukkitRunnable task;
 
-    public FindAnimalsTask(AdviceAnimalsPlugin plugin) {
+    public FindAnimalsTask(final AdviceAnimalsPlugin plugin) {
         this.plugin = plugin;
     }
 
@@ -41,7 +41,7 @@ public final class FindAnimalsTask {
     public void flush() {
         entities = null;
     }
-    
+
     public void iter() {
         try {
             if (entities == null || !entities.hasNext()) {

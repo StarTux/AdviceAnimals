@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import java.util.regex.Pattern;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -21,6 +22,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.EulerAngle;
 import org.json.simple.JSONValue;
 
+@Getter
 public final class AdviceAnimal {
     public final AdviceAnimalsPlugin plugin;
     public final String name;
@@ -41,9 +43,10 @@ public final class AdviceAnimal {
     private int soundAmount;
     private long soundPeriod;
     private float soundVolume;
-    private float soundMedian, soundVariance;
+    private float soundMedian;
+    private float soundVariance;
     // randomizer
-    private static final Random random = new Random(System.currentTimeMillis());
+    private static final Random RANDOM = new Random(System.currentTimeMillis());
     // animation
     private String animationName;
     private Animation animation = null;
@@ -51,7 +54,7 @@ public final class AdviceAnimal {
     private int ticks;
     private int motion;
 
-    public AdviceAnimal(AdviceAnimalsPlugin plugin, String name) {
+    public AdviceAnimal(final AdviceAnimalsPlugin plugin, final String name) {
         this.plugin = plugin;
         this.name = name;
     }
@@ -98,14 +101,14 @@ public final class AdviceAnimal {
         cachedEntity = entity;
         setLocation(entity.getLocation().clone());
         // if (entity instanceof Tameable) {
-        //     Tameable tameable = (Tameable)entity;
+        //     Tameable tameable = (Tameable) entity;
         //     if (tameable.isTamed()) {
         //         FakeTamer tamer = new FakeTamer();
         //         tameable.setOwner(tamer);
         //     }
         // }
         if (entity instanceof Ageable) {
-            Ageable ageable = (Ageable)entity;
+            Ageable ageable = (Ageable) entity;
             ageable.setAgeLock(true);
         }
         entity.setRemoveWhenFarAway(false);
@@ -122,11 +125,13 @@ public final class AdviceAnimal {
     public void configure(ConfigurationSection section) {
         // Entity UUID
         String tmp;
-        if ((tmp = section.getString("UUID")) != null) {
+        tmp = section.getString("UUID");
+        if (tmp != null) {
             setUniqueId(UUID.fromString(tmp));
         }
         // Entity Location
-        if ((tmp = section.getString("Location")) != null) {
+        tmp = section.getString("Location");
+        if (tmp != null) {
             Location loc = parseLocation(tmp);
             if (loc == null) plugin.getLogger().warning("Failed to parse location: " + tmp);
             if (loc != null) this.location = loc;
@@ -194,7 +199,7 @@ public final class AdviceAnimal {
     }
 
     private Location parseLocation(String str) {
-        String tokens[] = str.split(",");
+        String[] tokens = str.split(",");
         if (tokens.length != 6) {
             plugin.getLogger().warning("Expected 6 tokens, got " + tokens.length);
             return null;
@@ -204,8 +209,11 @@ public final class AdviceAnimal {
             plugin.getLogger().warning("World not found: " + tokens[0]);
             return null;
         }
-        double x, y, z;
-        float yaw, pitch;
+        double x;
+        double y;
+        double z;
+        float yaw;
+        float pitch;
         try {
             x = Double.parseDouble(tokens[1]);
             y = Double.parseDouble(tokens[2]);
@@ -233,7 +241,8 @@ public final class AdviceAnimal {
         if (this.location == null) {
             sender.sendMessage("Location: N/A");
         } else {
-            sender.sendMessage("Location: " + location.getWorld().getName() + ", " + location.getBlockX() + "," + location.getBlockY() + "," + location.getBlockZ());
+            sender.sendMessage("Location: " + location.getWorld().getName()
+                               + ", " + location.getBlockX() + "," + location.getBlockY() + "," + location.getBlockZ());
         }
     }
 
@@ -248,7 +257,7 @@ public final class AdviceAnimal {
         if (messages == null || messages.isEmpty()) return null;
         Object result = null;
         if (randomize) {
-            result = messages.get(random.nextInt(messages.size()));
+            result = messages.get(RANDOM.nextInt(messages.size()));
         } else {
             result = messages.get(Math.min(iter, messages.size() - 1));
             iter += 1;
@@ -288,7 +297,7 @@ public final class AdviceAnimal {
 
     private void useMessage(Player player, Object message) {
         if (!(message instanceof Map)) return;
-        ConfigurationSection config = new MemoryConfiguration().createSection("tmp", (Map)message);
+        ConfigurationSection config = new MemoryConfiguration().createSection("tmp", (Map) message);
         for (String string : getStringList(config, "Text")) {
             string = format(string, player);
             player.sendMessage(plugin.formatMessage(prefix, string));
@@ -309,7 +318,6 @@ public final class AdviceAnimal {
         if (config.isList("raw")) {
             for (Object obj : config.getList("raw")) {
                 String json = JSONValue.toJSONString(obj);
-                //System.out.println(name + ": Sending json: " + json);
                 String cmd = "tellraw " + player.getName() + " " + json;
                 plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), cmd);
             }
@@ -323,12 +331,12 @@ public final class AdviceAnimal {
         Object message = dealMessage(session);
         if (message == null) return;
         if (message instanceof String) {
-            legacy(player, (String)message);
+            legacy(player, (String) message);
         } else {
             useMessage(player, message);
         }
         if (soundName != null) {
-            plugin.getSounds().playSounds(player, cachedEntity.getLocation(), soundName, soundVolume, soundMedian, soundVariance, soundAmount, soundPeriod);
+            plugin.getSounds().playSounds(player, cachedEntity.getLocation(), this);
         }
         session.lastAdvice = System.currentTimeMillis();
     }
@@ -342,7 +350,9 @@ public final class AdviceAnimal {
     public void check(LivingEntity entity) {
         Location entityLocation = entity.getLocation();
         if (entity != cachedEntity) {
-            plugin.getLogger().info(String.format("Discovered animal %s at %s %d,%d,%d ", name, entityLocation.getWorld().getName(), entityLocation.getBlockX(), entityLocation.getBlockY(), entityLocation.getBlockZ()));
+            plugin.getLogger().info(String.format("Discovered animal %s at %s %d,%d,%d ",
+                                                  name, entityLocation.getWorld().getName(),
+                                                  entityLocation.getBlockX(), entityLocation.getBlockY(), entityLocation.getBlockZ()));
             cachedEntity = entity;
         }
         // Animation stuff
@@ -362,7 +372,10 @@ public final class AdviceAnimal {
             double dx = entityLocation.getX() - location.getX();
             double dy = entityLocation.getY() - location.getY();
             double dz = entityLocation.getZ() - location.getZ();
-            if (!entityLocation.getWorld().equals(location.getWorld()) || dx * dx + dz * dz > horizontalDistance * horizontalDistance || Math.abs(dy) > verticalDistance) {
+            boolean shouldTeleport = !entityLocation.getWorld().equals(location.getWorld())
+                || dx * dx + dz * dz > horizontalDistance * horizontalDistance
+                || Math.abs(dy) > verticalDistance;
+            if (shouldTeleport) {
                 plugin.getLogger().info("Teleporting " + name);
                 teleporting = true;
                 entity.teleport(location);

@@ -5,16 +5,16 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 public final class PlayerSession {
-    public final String name;
-    public String selectAnimal = null;
-    public boolean info = false;
-    public String rename = null;
-    public Location teleport = null;
-    public long lastAdvice = 0L;
-    public AdviceAnimal lastAnimal;
-    public int adviceIndex;
+    protected final String name;
+    protected String selectAnimal = null;
+    protected boolean info = false;
+    protected String rename = null;
+    protected Location teleport = null;
+    protected long lastAdvice = 0L;
+    protected AdviceAnimal lastAnimal;
+    protected int adviceIndex;
 
-    public PlayerSession(Player player) {
+    public PlayerSession(final Player player) {
         name = player.getName();
     }
 

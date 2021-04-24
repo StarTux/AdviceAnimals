@@ -35,12 +35,8 @@ public final class Msg {
         to.sendMessage(format("&r[&cAdviceAnimals&r] &c") + format(msg, args));
     }
 
-    static void consoleCommand(String cmd, Object... args)
-    {
+    static void consoleCommand(String cmd, Object... args) {
         if (args.length > 0) cmd = String.format(cmd, args);
-        // if (AdviceAnimalsPlugin.getInstance().getConfiguration().isDebugMode()) {
-        //     AdviceAnimalsPlugin.getInstance().getLogger().info("Running Console Command: " + cmd);
-        // }
         Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), cmd);
     }
 
@@ -95,18 +91,18 @@ public final class Msg {
             return "";
         } else if (json instanceof List) {
             StringBuilder sb = new StringBuilder();
-            for (Object o: (List)json) {
+            for (Object o: (List) json) {
                 sb.append(jsonToString(o));
             }
             return sb.toString();
         } else if (json instanceof Map) {
-            Map map = (Map)json;
+            Map map = (Map) json;
             StringBuilder sb = new StringBuilder();
             sb.append(map.get("text"));
             sb.append(map.get("extra"));
             return sb.toString();
         } else if (json instanceof String) {
-            return (String)json;
+            return (String) json;
         } else {
             return json.toString();
         }

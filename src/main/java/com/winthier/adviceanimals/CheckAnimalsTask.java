@@ -2,15 +2,13 @@ package com.winthier.adviceanimals;
 
 import java.util.Iterator;
 import org.bukkit.scheduler.BukkitRunnable;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 public final class CheckAnimalsTask {
     private final AdviceAnimalsPlugin plugin;
     Iterator<AdviceAnimal> animals;
     private BukkitRunnable task;
-
-    public CheckAnimalsTask(AdviceAnimalsPlugin plugin) {
-        this.plugin = plugin;
-    }
 
     public void start() {
         stop();

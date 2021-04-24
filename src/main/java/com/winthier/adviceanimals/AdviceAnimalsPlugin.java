@@ -7,8 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -160,7 +158,7 @@ public final class AdviceAnimalsPlugin extends JavaPlugin {
             sender.sendMessage("Location: " + loc.getWorld().getName() + ", " + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ());
             sender.sendMessage("Health: " + entity.getHealth() + "/" + entity.getMaxHealth());
             if (entity instanceof Tameable) {
-                Tameable tameable = (Tameable)entity;
+                Tameable tameable = (Tameable) entity;
                 sender.sendMessage("Tamed: " + (tameable.isTamed() ? "Yes" : "No"));
                 sender.sendMessage("Owner: " + (tameable.getOwner() != null ? tameable.getOwner().getName() : "None"));
             }
@@ -221,7 +219,7 @@ public final class AdviceAnimalsPlugin extends JavaPlugin {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String args[]) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) return false;
         Player player = null;
         if (sender instanceof Player) player = (Player) sender;
@@ -371,7 +369,7 @@ public final class AdviceAnimalsPlugin extends JavaPlugin {
                 }
                 try {
                     recording.cancel();
-                } catch (IllegalStateException ise) {}
+                } catch (IllegalStateException ise) { }
                 player.sendMessage("Recording stopped");
             } else if (subcmd.equals("cancel")) {
                 if (recording == null) {
@@ -380,7 +378,7 @@ public final class AdviceAnimalsPlugin extends JavaPlugin {
                 }
                 try {
                     recording.cancel();
-                } catch (IllegalStateException ise) {}
+                } catch (IllegalStateException ise) { }
                 recording = null;
                 player.sendMessage("Recording cancelled");
             } else if (subcmd.equals("save") && args.length == 3) {
@@ -391,7 +389,7 @@ public final class AdviceAnimalsPlugin extends JavaPlugin {
                 String name = args[2];
                 try {
                     recording.cancel();
-                } catch (IllegalStateException ise) {}
+                } catch (IllegalStateException ise) { }
                 recording.saveAnimation(name);
                 recording = null;
                 player.sendMessage("Recording saved as " + name + ".");

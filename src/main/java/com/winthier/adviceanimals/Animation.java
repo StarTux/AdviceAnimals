@@ -27,7 +27,7 @@ class Animation extends BukkitRunnable {
 
         static Frame deserialize(Map<?, ?> map) {
             @SuppressWarnings("unchecked")
-            Location location = (Location)map.get("location");
+            Location location = (Location) map.get("location");
             return new Frame(location);
         }
 
@@ -53,9 +53,11 @@ class Animation extends BukkitRunnable {
 
     void save(File file) {
         YamlConfiguration config = new YamlConfiguration();
-        List<Object> frames = new ArrayList<>();
-        config.set("frames", frames);
-        for (Frame frame: this.frames) frames.add(frame.serialize());
+        List<Object> list = new ArrayList<>();
+        config.set("frames", list);
+        for (Frame frame : frames) {
+            list.add(frame.serialize());
+        }
         try {
             config.save(file);
         } catch (IOException ioe) {
@@ -84,8 +86,8 @@ class Animation extends BukkitRunnable {
         return result;
     }
 
-    public boolean saveAnimation(String name) {
-        File file = getFile(name);
+    public boolean saveAnimation(String newName) {
+        File file = getFile(newName);
         save(file);
         return true;
     }
@@ -95,22 +97,22 @@ class Animation extends BukkitRunnable {
         Frame frame = frames.get(frameNo);
         frame.apply(e);
         if (e instanceof ArmorStand) {
-            ArmorStand stand = (ArmorStand)e;
+            ArmorStand stand = (ArmorStand) e;
             int motion = frameNo % 20;
             if (motion < 10) {
                 int m = motion;
-                stand.setRightLegPose(new EulerAngle(1.0 -(double)m / 5.0, 0.0, 0.02));
-                stand.setLeftLegPose(new EulerAngle(-1.0 + (double)m / 5.0, 0.0, -0.02));
+                stand.setRightLegPose(new EulerAngle(1.0 - (double) m / 5.0, 0.0, 0.02));
+                stand.setLeftLegPose(new EulerAngle(-1.0 + (double) m / 5.0, 0.0, -0.02));
 
-                stand.setLeftArmPose(new EulerAngle(1.0 -(double)m / 5.0, 0.0, -0.02));
-                stand.setRightArmPose(new EulerAngle(-1.0 + (double)m / 5.0, 0.0, 0.02));
+                stand.setLeftArmPose(new EulerAngle(1.0 - (double) m / 5.0, 0.0, -0.02));
+                stand.setRightArmPose(new EulerAngle(-1.0 + (double) m / 5.0, 0.0, 0.02));
             } else {
                 int m = motion - 10;
-                stand.setLeftLegPose(new EulerAngle(1.0 -(double)m / 5.0, 0.0, -0.02));
-                stand.setRightLegPose(new EulerAngle(-1.0 + (double)m / 5.0, 0.0, 0.02));
+                stand.setLeftLegPose(new EulerAngle(1.0 - (double) m / 5.0, 0.0, -0.02));
+                stand.setRightLegPose(new EulerAngle(-1.0 + (double) m / 5.0, 0.0, 0.02));
 
-                stand.setRightArmPose(new EulerAngle(1.0 -(double)m / 5.0, 0.0, 0.02));
-                stand.setLeftArmPose(new EulerAngle(-1.0 + (double)m / 5.0, 0.0, -0.02));
+                stand.setRightArmPose(new EulerAngle(1.0 - (double) m / 5.0, 0.0, 0.02));
+                stand.setLeftArmPose(new EulerAngle(-1.0 + (double) m / 5.0, 0.0, -0.02));
             }
         }
     }
