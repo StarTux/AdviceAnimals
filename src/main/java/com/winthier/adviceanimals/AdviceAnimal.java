@@ -20,7 +20,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.util.EulerAngle;
-import org.json.simple.JSONValue;
+import com.destroystokyo.paper.entity.ai.Goal;
 
 @Getter
 public final class AdviceAnimal {
@@ -317,7 +317,7 @@ public final class AdviceAnimal {
         }
         if (config.isList("raw")) {
             for (Object obj : config.getList("raw")) {
-                String json = JSONValue.toJSONString(obj);
+                String json = Msg.toJsonString(obj);
                 String cmd = "tellraw " + player.getName() + " " + json;
                 plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), cmd);
             }
@@ -414,7 +414,12 @@ public final class AdviceAnimal {
             entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.0);
         }
         if (removeGoals && entity instanceof Mob) {
-            Bukkit.getMobGoals().removeAllGoals((Mob) entity);
+            Mob mob = (Mob) entity;
+            for (Goal<Mob> goal : Bukkit.getMobGoals().getAllGoals(mob)) {
+                if (!goal.getKey().getNamespacedKey().getKey().equals("look_at_player")) {
+                    Bukkit.getMobGoals().removeGoal(mob, goal);
+                }
+            }
         }
         if (health > 0.0 && entity.getHealth() != health) {
             entity.setHealth(health);
