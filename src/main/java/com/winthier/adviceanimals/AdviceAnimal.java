@@ -354,6 +354,18 @@ public final class AdviceAnimal {
                                                   name, entityLocation.getWorld().getName(),
                                                   entityLocation.getBlockX(), entityLocation.getBlockY(), entityLocation.getBlockZ()));
             cachedEntity = entity;
+            if (slow) {
+                entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.0);
+            }
+            if (removeGoals && entity instanceof Mob) {
+                Mob mob = (Mob) entity;
+                for (Goal<Mob> goal : Bukkit.getMobGoals().getAllGoals(mob)) {
+                    if (!goal.getKey().getNamespacedKey().getKey().equals("look_at_player")) {
+                        Bukkit.getMobGoals().removeGoal(mob, goal);
+                    }
+                }
+            }
+            entity.setCollidable(false);
         }
         // Animation stuff
         if (animation == null && animationName != null) {
@@ -409,17 +421,6 @@ public final class AdviceAnimal {
             if (animationFrame >= animation.frames.size()) animationFrame = 0;
             animation.apply(entity, animationFrame);
             animationFrame += 1;
-        }
-        if (slow) {
-            entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.0);
-        }
-        if (removeGoals && entity instanceof Mob) {
-            Mob mob = (Mob) entity;
-            for (Goal<Mob> goal : Bukkit.getMobGoals().getAllGoals(mob)) {
-                if (!goal.getKey().getNamespacedKey().getKey().equals("look_at_player")) {
-                    Bukkit.getMobGoals().removeGoal(mob, goal);
-                }
-            }
         }
         if (health > 0.0 && entity.getHealth() != health) {
             entity.setHealth(health);
