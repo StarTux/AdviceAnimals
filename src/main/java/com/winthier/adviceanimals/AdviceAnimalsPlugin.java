@@ -1,5 +1,7 @@
 package com.winthier.adviceanimals;
 
+import com.cavetale.core.event.player.PluginPlayerEvent.Detail;
+import com.cavetale.core.event.player.PluginPlayerEvent;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -177,6 +179,9 @@ public final class AdviceAnimalsPlugin extends JavaPlugin {
                 return true;
             } else {
                 if (animal != null) animal.printMessage(player);
+                PluginPlayerEvent.Name.INTERACT_NPC.ultimate(this, player)
+                    .detail(Detail.NAME, animal.getName())
+                    .call();
             }
         }
         return animal != null;
