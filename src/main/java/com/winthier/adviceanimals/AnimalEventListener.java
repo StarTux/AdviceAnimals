@@ -2,6 +2,7 @@ package com.winthier.adviceanimals;
 
 import com.cavetale.core.event.entity.PlayerEntityAbilityQuery;
 import com.cavetale.core.event.entity.PluginEntityEvent;
+import io.papermc.paper.event.entity.EntityMoveEvent;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -193,6 +194,13 @@ public final class AnimalEventListener implements Listener {
     protected void onPlayerEntityAbility(PlayerEntityAbilityQuery query) {
         if (plugin.checkEntity(query.getEntity())) {
             query.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    protected void onEntityMove(EntityMoveEvent event) {
+        if (plugin.checkEntity(event.getEntity())) {
+            event.setCancelled(true);
         }
     }
 }
