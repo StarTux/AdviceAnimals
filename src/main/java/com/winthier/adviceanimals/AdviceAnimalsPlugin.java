@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.UUID;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -158,7 +159,8 @@ public final class AdviceAnimalsPlugin extends JavaPlugin {
             sender.sendMessage("Type: " + entity.getType().name().toLowerCase());
             Location loc = entity.getLocation();
             sender.sendMessage("Location: " + loc.getWorld().getName() + ", " + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ());
-            sender.sendMessage("Health: " + entity.getHealth() + "/" + entity.getMaxHealth());
+            int maxHealth = (int) Math.round(entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+            sender.sendMessage("Health: " + entity.getHealth() + "/" + maxHealth);
             if (entity instanceof Tameable) {
                 Tameable tameable = (Tameable) entity;
                 sender.sendMessage("Tamed: " + (tameable.isTamed() ? "Yes" : "No"));

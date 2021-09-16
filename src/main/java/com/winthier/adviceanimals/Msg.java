@@ -1,14 +1,15 @@
 package com.winthier.adviceanimals;
 
+import com.google.gson.Gson;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import com.google.gson.Gson;
 
 public final class Msg {
     private Msg() { }
@@ -109,6 +110,6 @@ public final class Msg {
     }
 
     public static void sendActionBar(Player player, String msg) {
-        player.sendActionBar(format(msg));
+        player.sendActionBar(Component.text(format(msg)));
     }
 }

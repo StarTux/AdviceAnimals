@@ -1,5 +1,6 @@
 package com.winthier.adviceanimals;
 
+import com.destroystokyo.paper.entity.ai.Goal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,13 +15,12 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
-import org.bukkit.entity.Ageable;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Breedable;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
 import org.bukkit.util.EulerAngle;
-import com.destroystokyo.paper.entity.ai.Goal;
 
 @Getter
 public final class AdviceAnimal {
@@ -107,9 +107,9 @@ public final class AdviceAnimal {
         //         tameable.setOwner(tamer);
         //     }
         // }
-        if (entity instanceof Ageable) {
-            Ageable ageable = (Ageable) entity;
-            ageable.setAgeLock(true);
+        if (entity instanceof Breedable) {
+            Breedable breedable = (Breedable) entity;
+            breedable.setAgeLock(true);
         }
         entity.setRemoveWhenFarAway(false);
         entity.setPersistent(true);
