@@ -17,6 +17,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Breedable;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;
@@ -90,10 +91,6 @@ public final class AdviceAnimal {
 
     public Location getLocation() {
         return location;
-    }
-
-    public boolean isTeleporting() {
-        return teleporting;
     }
 
     public void select(LivingEntity entity) {
@@ -187,12 +184,17 @@ public final class AdviceAnimal {
     }
 
     public LivingEntity getEntity() {
-        if (uuid == null) return null;
         if (cachedEntity != null) {
-            if (cachedEntity.getUniqueId().equals(uuid) && !cachedEntity.isDead()) {
+            if (!cachedEntity.isDead()) {
                 return cachedEntity;
             } else {
                 cachedEntity = null;
+            }
+        } else if (uuid != null) {
+            Entity e = Bukkit.getEntity(uuid);
+            if (e instanceof LivingEntity) {
+                cachedEntity = (LivingEntity) e;
+                return cachedEntity;
             }
         }
         return null;

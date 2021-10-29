@@ -2,7 +2,6 @@ package com.winthier.adviceanimals;
 
 import com.cavetale.core.event.entity.PlayerEntityAbilityQuery;
 import com.cavetale.core.event.entity.PluginEntityEvent;
-import io.papermc.paper.event.entity.EntityMoveEvent;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -76,11 +75,6 @@ public final class AnimalEventListener implements Listener {
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onEntityPortal(EntityPortalEvent event) {
-        if (plugin.checkEntity(event.getEntity())) event.setCancelled(true);
-    }
-
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
-    public void onEntityTeleport(EntityTeleportEvent event) {
         if (plugin.checkEntity(event.getEntity())) event.setCancelled(true);
     }
 
@@ -197,11 +191,11 @@ public final class AnimalEventListener implements Listener {
         }
     }
 
-    @EventHandler
-    protected void onEntityMove(EntityMoveEvent event) {
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    public void onEntityTeleport(EntityTeleportEvent event) {
         if (plugin.checkEntity(event.getEntity())) {
-            AdviceAnimal animal = plugin.getAnimal(event.getEntity());
-            if (animal != null && !animal.isTeleporting() && animal.isTooFar(event.getTo())) {
+            AdviceAnimal animal = plugin.getAnimal((LivingEntity) event.getEntity());
+            if (animal != null && !animal.isTeleporting()) {
                 event.setCancelled(true);
             }
         }
