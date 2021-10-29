@@ -189,7 +189,7 @@ public final class AdviceAnimal {
     public LivingEntity getEntity() {
         if (uuid == null) return null;
         if (cachedEntity != null) {
-            if (cachedEntity.getUniqueId().equals(uuid) && cachedEntity.isValid()) {
+            if (cachedEntity.getUniqueId().equals(uuid) && !cachedEntity.isDead()) {
                 return cachedEntity;
             } else {
                 cachedEntity = null;
@@ -244,6 +244,8 @@ public final class AdviceAnimal {
             sender.sendMessage("Location: " + location.getWorld().getName()
                                + ", " + location.getBlockX() + "," + location.getBlockY() + "," + location.getBlockZ());
         }
+        sender.sendMessage("HorizontalDistance: " + horizontalDistance);
+        sender.sendMessage("VerticalDistance: " + verticalDistance);
     }
 
     public Object dealMessage(PlayerSession session) {
@@ -381,17 +383,9 @@ public final class AdviceAnimal {
                 setLocation(entityLocation.clone());
                 return;
             }
-            double dx = entityLocation.getX() - location.getX();
-            double dy = entityLocation.getY() - location.getY();
-            double dz = entityLocation.getZ() - location.getZ();
-            boolean shouldTeleport = !entityLocation.getWorld().equals(location.getWorld())
-                || dx * dx + dz * dz > horizontalDistance * horizontalDistance
-                || Math.abs(dy) > verticalDistance;
-            if (shouldTeleport) {
+            if (isTooFar(entityLocation)) {
                 plugin.getLogger().info("Teleporting " + name);
-                teleporting = true;
-                entity.teleport(location);
-                teleporting = false;
+                teleport(location);
             }
             if (entity instanceof ArmorStand) {
                 ArmorStand stand = (ArmorStand) entity;
@@ -425,5 +419,23 @@ public final class AdviceAnimal {
         if (health > 0.0 && entity.getHealth() != health) {
             entity.setHealth(health);
         }
+    }
+
+    public void teleport(Location toLocation) {
+        LivingEntity entity = getEntity();
+        if (entity == null || entity.isDead()) return;
+        teleporting = true;
+        entity.teleport(toLocation);
+        teleporting = false;
+    }
+
+    public boolean isTooFar(Location toLocation) {
+        if (location == null) return false;
+        if (!toLocation.getWorld().equals(location.getWorld())) return true;
+        final double dx = toLocation.getX() - location.getX();
+        final double dy = toLocation.getY() - location.getY();
+        final double dz = toLocation.getZ() - location.getZ();
+        return dx * dx + dz * dz > horizontalDistance * horizontalDistance
+            || Math.abs(dy) > verticalDistance;
     }
 }

@@ -200,7 +200,10 @@ public final class AnimalEventListener implements Listener {
     @EventHandler
     protected void onEntityMove(EntityMoveEvent event) {
         if (plugin.checkEntity(event.getEntity())) {
-            event.setCancelled(true);
+            AdviceAnimal animal = plugin.getAnimal(event.getEntity());
+            if (animal != null && animal.isTooFar(event.getTo())) {
+                event.setCancelled(true);
+            }
         }
     }
 }

@@ -283,7 +283,7 @@ public final class AdviceAnimalsPlugin extends JavaPlugin {
                     return true;
                 }
                 animal.setLocation(player.getLocation());
-                animal.check();
+                animal.teleport(player.getLocation());
                 player.sendMessage(ChatColor.GREEN + "Animal teleported to you: " + animal.name);
                 return true;
             }
@@ -319,7 +319,7 @@ public final class AdviceAnimalsPlugin extends JavaPlugin {
             } else {
                 player.sendMessage("Could not locate advice animal " + aa.getName());
             }
-                player.sendMessage("Teleported to advice animal " + aa.getName());
+            player.sendMessage("Teleported to advice animal " + aa.getName());
         } else if (args.length == 2 && args[0].equals("select")) {
             if (player == null) {
                 sender.sendMessage("Player expected");
