@@ -81,10 +81,6 @@ public final class AdviceAnimal {
         this.uuid = newUuid;
     }
 
-    public void setCachedEntity(LivingEntity entity) {
-        this.cachedEntity = entity;
-    }
-
     public void setLocation(Location location) {
         this.location = location;
     }
@@ -96,14 +92,8 @@ public final class AdviceAnimal {
     public void select(LivingEntity entity) {
         uuid = entity.getUniqueId();
         cachedEntity = entity;
+        setupEntity(entity);
         setLocation(entity.getLocation().clone());
-        // if (entity instanceof Tameable) {
-        //     Tameable tameable = (Tameable) entity;
-        //     if (tameable.isTamed()) {
-        //         FakeTamer tamer = new FakeTamer();
-        //         tameable.setOwner(tamer);
-        //     }
-        // }
         if (entity instanceof Breedable) {
             Breedable breedable = (Breedable) entity;
             breedable.setAgeLock(true);
@@ -194,10 +184,33 @@ public final class AdviceAnimal {
             Entity e = Bukkit.getEntity(uuid);
             if (e instanceof LivingEntity) {
                 cachedEntity = (LivingEntity) e;
+                setupEntity(cachedEntity);
+                Location loc = e.getLocation();
+                plugin.getLogger().info(String.format("Discovered animal %s at %s %d,%d,%d ",
+                                                      name, loc.getWorld().getName(),
+                                                      loc.getBlockX(), loc.getBlockY(), loc.getBlockZ()));
                 return cachedEntity;
             }
         }
         return null;
+    }
+
+    /**
+     * Modify a newly selected or discovered entity for the first time.
+     */
+    private void setupEntity(LivingEntity entity) {
+        if (slow) {
+            entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.0);
+        }
+        if (removeGoals && entity instanceof Mob) {
+            Mob mob = (Mob) entity;
+            for (Goal<Mob> goal : Bukkit.getMobGoals().getAllGoals(mob)) {
+                if (!goal.getKey().getNamespacedKey().getKey().equals("look_at_player")) {
+                    Bukkit.getMobGoals().removeGoal(mob, goal);
+                }
+            }
+        }
+        entity.setCollidable(false);
     }
 
     private Location parseLocation(String str) {
@@ -353,24 +366,6 @@ public final class AdviceAnimal {
 
     public void check(LivingEntity entity) {
         Location entityLocation = entity.getLocation();
-        if (entity != cachedEntity) {
-            plugin.getLogger().info(String.format("Discovered animal %s at %s %d,%d,%d ",
-                                                  name, entityLocation.getWorld().getName(),
-                                                  entityLocation.getBlockX(), entityLocation.getBlockY(), entityLocation.getBlockZ()));
-            cachedEntity = entity;
-            if (slow) {
-                entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.0);
-            }
-            if (removeGoals && entity instanceof Mob) {
-                Mob mob = (Mob) entity;
-                for (Goal<Mob> goal : Bukkit.getMobGoals().getAllGoals(mob)) {
-                    if (!goal.getKey().getNamespacedKey().getKey().equals("look_at_player")) {
-                        Bukkit.getMobGoals().removeGoal(mob, goal);
-                    }
-                }
-            }
-            entity.setCollidable(false);
-        }
         // Animation stuff
         if (animation == null && animationName != null) {
             try {
