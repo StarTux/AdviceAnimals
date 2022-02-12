@@ -384,7 +384,7 @@ public final class AdviceAnimal {
                 plugin.getLogger().info("Teleporting " + name);
                 teleport(location);
             }
-            if (entity instanceof ArmorStand) {
+            if ("PocketMob".equals(name) && entity instanceof ArmorStand) {
                 ArmorStand stand = (ArmorStand) entity;
                 if (motion < 20) {
                     int m = motion;
