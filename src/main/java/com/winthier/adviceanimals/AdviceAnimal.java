@@ -384,29 +384,35 @@ public final class AdviceAnimal {
                 plugin.getLogger().info("Teleporting " + name);
                 teleport(location);
             }
-            if ("PocketMob".equals(name) && entity instanceof ArmorStand) {
-                ArmorStand stand = (ArmorStand) entity;
-                if (motion < 20) {
-                    int m = motion;
-                    stand.setRightLegPose(new EulerAngle(1.0 - (double) m / 10.0, 0.0, 0.02));
-                    stand.setLeftLegPose(new EulerAngle(-1.0 + (double) m / 10.0, 0.0, -0.02));
+            if (name != null && entity instanceof ArmorStand) {
+                switch (name) {
+                case "PocketMob":
+                case "EasterTokenShop": {
+                    ArmorStand stand = (ArmorStand) entity;
+                    if (motion < 20) {
+                        int m = motion;
+                        stand.setRightLegPose(new EulerAngle(1.0 - (double) m / 10.0, 0.0, 0.02));
+                        stand.setLeftLegPose(new EulerAngle(-1.0 + (double) m / 10.0, 0.0, -0.02));
 
-                    stand.setLeftArmPose(new EulerAngle(1.0 - (double) m / 10.0, 0.0, -0.02));
-                    stand.setRightArmPose(new EulerAngle(-1.0 + (double) m / 10.0, 0.0, 0.02));
+                        stand.setLeftArmPose(new EulerAngle(1.0 - (double) m / 10.0, 0.0, -0.02));
+                        stand.setRightArmPose(new EulerAngle(-1.0 + (double) m / 10.0, 0.0, 0.02));
 
-                    stand.setHeadPose(new EulerAngle(0.25 - (double) m / 40.0, 0.0, 0.0));
-                } else {
-                    int m = motion - 20;
-                    stand.setLeftLegPose(new EulerAngle(1.0 - (double) m / 10.0, 0.0, -0.02));
-                    stand.setRightLegPose(new EulerAngle(-1.0 + (double) m / 10.0, 0.0, 0.02));
+                        stand.setHeadPose(new EulerAngle(0.25 - (double) m / 40.0, 0.0, 0.0));
+                    } else {
+                        int m = motion - 20;
+                        stand.setLeftLegPose(new EulerAngle(1.0 - (double) m / 10.0, 0.0, -0.02));
+                        stand.setRightLegPose(new EulerAngle(-1.0 + (double) m / 10.0, 0.0, 0.02));
 
-                    stand.setRightArmPose(new EulerAngle(1.0 - (double) m / 10.0, 0.0, 0.02));
-                    stand.setLeftArmPose(new EulerAngle(-1.0 + (double) m / 10.0, 0.0, -0.02));
+                        stand.setRightArmPose(new EulerAngle(1.0 - (double) m / 10.0, 0.0, 0.02));
+                        stand.setLeftArmPose(new EulerAngle(-1.0 + (double) m / 10.0, 0.0, -0.02));
 
-                    stand.setHeadPose(new EulerAngle(-0.25 + (double) m / 40.0, 0.0, 0.0));
+                        stand.setHeadPose(new EulerAngle(-0.25 + (double) m / 40.0, 0.0, 0.0));
+                    }
+                    motion = motion + 1;
+                    if (motion >= 40) motion = 0;
                 }
-                motion = motion + 1;
-                if (motion >= 40) motion = 0;
+                default: break;
+                }
             }
         } else {
             if (animationFrame >= animation.frames.size()) animationFrame = 0;
