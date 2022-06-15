@@ -181,9 +181,9 @@ public final class AdviceAnimalsPlugin extends JavaPlugin {
                 return true;
             } else if (animal != null) {
                 animal.printMessage(player);
-                PluginPlayerEvent.Name.INTERACT_NPC.ultimate(this, player)
+                PluginPlayerEvent.Name.INTERACT_NPC.make(this, player)
                     .detail(Detail.NAME, animal.getName())
-                    .call();
+                    .callEvent();
             }
         }
         return animal != null;
