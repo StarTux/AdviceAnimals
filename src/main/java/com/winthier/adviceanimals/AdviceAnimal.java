@@ -387,7 +387,9 @@ public final class AdviceAnimal {
             if (name != null && entity instanceof ArmorStand) {
                 switch (name) {
                 case "PocketMob":
-                case "EasterTokenShop": {
+                case "EasterTokenShop":
+                case "EasterTokens":
+                case "EasterEggs": {
                     ArmorStand stand = (ArmorStand) entity;
                     if (motion < 20) {
                         int m = motion;
