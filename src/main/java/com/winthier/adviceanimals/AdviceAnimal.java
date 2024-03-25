@@ -359,12 +359,16 @@ public final class AdviceAnimal {
     }
 
     public void check() {
+        // Stack Overflow
+        if (teleporting) return;
         final LivingEntity entity = getEntity();
         if (entity == null) return;
         check(entity);
     }
 
     public void check(LivingEntity entity) {
+        // Stack Overflow
+        if (teleporting) return;
         Location entityLocation = entity.getLocation();
         // Animation stuff
         if (animation == null && animationName != null) {
