@@ -1,12 +1,12 @@
 package com.winthier.adviceanimals;
 
 import java.util.Random;
+import lombok.RequiredArgsConstructor;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public final class Sounds {

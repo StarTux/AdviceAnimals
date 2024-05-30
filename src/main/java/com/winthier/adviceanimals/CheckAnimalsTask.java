@@ -1,8 +1,8 @@
 package com.winthier.adviceanimals;
 
 import java.util.Iterator;
-import org.bukkit.scheduler.BukkitRunnable;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.scheduler.BukkitRunnable;
 
 @RequiredArgsConstructor
 public final class CheckAnimalsTask {

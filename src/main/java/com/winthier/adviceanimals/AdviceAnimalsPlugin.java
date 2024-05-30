@@ -1,7 +1,7 @@
 package com.winthier.adviceanimals;
 
-import com.cavetale.core.event.player.PluginPlayerEvent.Detail;
 import com.cavetale.core.event.player.PluginPlayerEvent;
+import com.cavetale.core.event.player.PluginPlayerEvent.Detail;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
