@@ -200,7 +200,7 @@ public final class AdviceAnimal {
      */
     private void setupEntity(LivingEntity entity) {
         if (slow) {
-            entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.0);
+            entity.getAttribute(Attribute.MOVEMENT_SPEED).setBaseValue(0.0);
         }
         if (removeGoals && entity instanceof Mob) {
             Mob mob = (Mob) entity;

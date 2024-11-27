@@ -159,7 +159,7 @@ public final class AdviceAnimalsPlugin extends JavaPlugin {
             sender.sendMessage("Type: " + entity.getType().name().toLowerCase());
             Location loc = entity.getLocation();
             sender.sendMessage("Location: " + loc.getWorld().getName() + ", " + loc.getBlockX() + "," + loc.getBlockY() + "," + loc.getBlockZ());
-            int maxHealth = (int) Math.round(entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+            int maxHealth = (int) Math.round(entity.getAttribute(Attribute.MAX_HEALTH).getValue());
             sender.sendMessage("Health: " + entity.getHealth() + "/" + maxHealth);
             if (entity instanceof Tameable) {
                 Tameable tameable = (Tameable) entity;
