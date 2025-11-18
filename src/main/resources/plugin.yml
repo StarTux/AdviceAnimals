@@ -3,7 +3,7 @@ main: com.winthier.adviceanimals.AdviceAnimalsPlugin
 name: AdviceAnimals
 description: Talking animals
 version: 0.3
-api-version: '1.21.8'
+api-version: '1.21.10'
 
 author: StarTux
 website: https://cavetale.com
